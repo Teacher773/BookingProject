@@ -8,7 +8,7 @@ load_dotenv()
 
 class ApiClient:
     def __init__(self):
-        environment_str = os.getenv('ENVIROMENT')
+        environment_str = os.getenv('ENVIRONMENT')
         try:
             environment = Environment(environment_str)
 
@@ -19,7 +19,8 @@ class ApiClient:
         self.headers = {
             "content-type": "application/json"
         }
-    def get_base_url(self,environment:Environment) -> str:
+
+    def get_base_url(self, environment: Environment) -> str:
         if environment == Environment.TEST:
             return os.getenv("TEST_BASE_URL")
         elif environment == Environment.PROD:
@@ -27,14 +28,14 @@ class ApiClient:
         else:
             raise ValueError(f"Unsupported environment {environment}")
 
-    def get(self,endpoint, params=None, status_code=200):
+    def get(self, endpoint, params=None, status_code=200):
         url = self.base_url + endpoint
         response = requests.get(url, headers=self.headers, params=params)
         if status_code:
             assert response.status_code == status_code
             return response.json()
 
-    def post(self,endpoint, data=None, status_code=200):
+    def post(self, endpoint, data=None, status_code=200):
         url = self.base_url + endpoint
         response = requests.post(url, headers=self.headers, json=data)
         if status_code:
